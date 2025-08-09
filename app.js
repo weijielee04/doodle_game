@@ -22,12 +22,27 @@ document.addEventListener('DOMContentLoaded', () => { // this is to ensure that 
     const startbtn = document.getElementById('start');
     const scorebtn = document.getElementById('score');
     const settingbtn = document.getElementById('setting');
-
+    const jumpSound = new Audio('./assests/cartoon-jump-6462.mp3');
+    jumpSound.preload = 'auto';
+    const gameOverSound = new Audio('./assests/kl-peach-game-over-iii-142453.mp3');
+    gameOverSound.preload = 'auto';
+    const Startaudio = new Audio ('./assests/game-start-6104.mp3');
 
     startbtn.onclick = function () {
         menu.style.display = 'none';
         grid.style.display = 'block';
         isGameOver = false;
+        jumpSound.play().then(() => {
+            jumpSound.pause();
+            jumpSound.currentTime = 0;
+        });
+
+        gameOverSound.play().then(() => {
+            gameOverSound.pause();
+            jumpSound.currentTime = 0;
+        });
+        Startaudio.play();
+
         start();
     }
 
@@ -101,14 +116,15 @@ document.addEventListener('DOMContentLoaded', () => { // this is to ensure that 
         clearInterval(downTimeId)
         isJumping = true
         upTimeId = setInterval( function() {
-            doodlerBottomSpace += 20
+            doodlerBottomSpace += 10
             doodler.style.bottom = doodlerBottomSpace + 'px'
             console.log(doodlerBottomSpace)
             if (doodlerBottomSpace > startPoint +200 || doodlerBottomSpace > 580){
                 fall()
             }
         },seconds)
-
+        jumpSound.currentTime = 0; // rewind to start
+        jumpSound.play();
     }
 
     function fall(){
@@ -119,6 +135,8 @@ document.addEventListener('DOMContentLoaded', () => { // this is to ensure that 
             doodler.style.bottom = doodlerBottomSpace +'px'
             if(doodlerBottomSpace <=0){
                 gameOver()
+                gameOverSound.currentTime = 0;
+                gameOverSound.play();
             }
             platforms.forEach(platform => {
                 if ( 
@@ -146,6 +164,8 @@ document.addEventListener('DOMContentLoaded', () => { // this is to ensure that 
         doodlerBottomSpace = startPoint
         doodlerLeftSpace = 50
         score = 0
+        
+        Startaudio.play();
         start()
     }
 
